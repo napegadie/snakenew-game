@@ -34,6 +34,11 @@ COLOR_SCORE = (255, 255, 255)  # White
 COLOR_GAME_OVER = (255, 200, 50)  # Yellow-orange
 COLOR_GRID = (40, 40, 50)  # Subtle grid lines
 
+# UI Constants
+STATE_TEXT_X_OFFSET = 150  # X offset from right edge for state text
+OVERLAY_ALPHA_PAUSED = 150  # Alpha value for pause overlay
+OVERLAY_ALPHA_GAMEOVER = 180  # Alpha value for game over overlay
+
 # Directions
 UP = (0, -1)
 DOWN = (0, 1)
@@ -234,16 +239,16 @@ class SnakeGame:
         # Draw game state
         if self.paused:
             state_text = self.font_small.render("PAUSED", True, COLOR_GAME_OVER)
-            self.screen.blit(state_text, (WINDOW_WIDTH - 150, 10))
+            self.screen.blit(state_text, (WINDOW_WIDTH - STATE_TEXT_X_OFFSET, 10))
         elif not self.game_over:
             state_text = self.font_small.render("Playing", True, COLOR_SNAKE)
-            self.screen.blit(state_text, (WINDOW_WIDTH - 150, 10))
+            self.screen.blit(state_text, (WINDOW_WIDTH - STATE_TEXT_X_OFFSET, 10))
         
         # Draw game over screen
         if self.game_over:
             # Semi-transparent overlay
             overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
-            overlay.set_alpha(180)
+            overlay.set_alpha(OVERLAY_ALPHA_GAMEOVER)
             overlay.fill(COLOR_BACKGROUND)
             self.screen.blit(overlay, (0, 0))
             
@@ -266,7 +271,7 @@ class SnakeGame:
         elif self.paused:
             # Semi-transparent overlay
             overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
-            overlay.set_alpha(150)
+            overlay.set_alpha(OVERLAY_ALPHA_PAUSED)
             overlay.fill(COLOR_BACKGROUND)
             self.screen.blit(overlay, (0, 0))
             
