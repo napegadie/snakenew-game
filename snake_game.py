@@ -137,7 +137,6 @@ class SnakeGame:
         self.food = Food()
         self.score = 0
         self.game_over = False
-        self.paused = False
     
     def handle_events(self):
         """Handle keyboard input and window events"""
@@ -147,7 +146,7 @@ class SnakeGame:
             
             if event.type == pygame.KEYDOWN:
                 if self.game_over:
-                    # Restart game on any key when game is over
+                    # Restart game on SPACE or RETURN key when game is over
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         self.restart_game()
                 else:
