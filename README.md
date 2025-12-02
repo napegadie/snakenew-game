@@ -7,8 +7,10 @@ A classic Snake game implemented in Python with pygame, featuring modern design 
 - **Modern Dark Theme**: Dark background with bright, contrasting colors for excellent visibility
 - **Real-time Score Tracking**: Score updates instantly as you eat food
 - **Smooth Controls**: Responsive arrow key controls
+- **Pause/Resume**: Pause and resume the game at any time
+- **Restart Anytime**: Restart the game during gameplay or after game over
+- **Game State Display**: See current game state (Playing, Paused, Game Over)
 - **Collision Detection**: Game ends when snake hits walls or its own body
-- **Restart Functionality**: Quick restart with spacebar after game over
 - **Visual Enhancements**: Rounded corners, subtle grid, and distinct head/body colors
 
 ## Requirements
@@ -38,6 +40,8 @@ python snake_game.py
 
 2. **Controls**:
    - **Arrow Keys**: Control snake direction (Up, Down, Left, Right)
+   - **P**: Pause/Resume game
+   - **R**: Restart game (during gameplay)
    - **SPACE**: Restart game after game over
    - **ESC**: Quit game
 

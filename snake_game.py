@@ -4,7 +4,9 @@ A classic Snake game with modern design, featuring:
 - Dark background with bright contrasting colors
 - Real-time score tracking
 - Collision detection (walls and self-collision)
-- Restart functionality
+- Pause/Resume functionality
+- Restart functionality (during game and after game over)
+- Game state display
 - Arrow key controls
 """
 
@@ -31,6 +33,11 @@ COLOR_FOOD = (255, 50, 100)  # Bright pink-red
 COLOR_SCORE = (255, 255, 255)  # White
 COLOR_GAME_OVER = (255, 200, 50)  # Yellow-orange
 COLOR_GRID = (40, 40, 50)  # Subtle grid lines
+
+# UI Constants
+STATE_TEXT_X_OFFSET = 150  # X offset from right edge for state text
+OVERLAY_ALPHA_PAUSED = 150  # Alpha value for pause overlay
+OVERLAY_ALPHA_GAMEOVER = 180  # Alpha value for game over overlay
 
 # Directions
 UP = (0, -1)
@@ -137,6 +144,7 @@ class SnakeGame:
         self.food = Food()
         self.score = 0
         self.game_over = False
+        self.paused = False
     
     def handle_events(self):
         """Handle keyboard input and window events"""
@@ -150,23 +158,31 @@ class SnakeGame:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         self.restart_game()
                 else:
-                    # Handle direction changes
-                    if event.key == pygame.K_UP:
-                        self.snake.change_direction(UP)
-                    elif event.key == pygame.K_DOWN:
-                        self.snake.change_direction(DOWN)
-                    elif event.key == pygame.K_LEFT:
-                        self.snake.change_direction(LEFT)
-                    elif event.key == pygame.K_RIGHT:
-                        self.snake.change_direction(RIGHT)
-                    elif event.key == pygame.K_ESCAPE:
+                    # Handle pause/resume
+                    if event.key == pygame.K_p:
+                        self.paused = not self.paused
+                    # Handle restart during active game
+                    elif event.key == pygame.K_r:
+                        self.restart_game()
+                    # Handle direction changes only when not paused
+                    elif not self.paused:
+                        if event.key == pygame.K_UP:
+                            self.snake.change_direction(UP)
+                        elif event.key == pygame.K_DOWN:
+                            self.snake.change_direction(DOWN)
+                        elif event.key == pygame.K_LEFT:
+                            self.snake.change_direction(LEFT)
+                        elif event.key == pygame.K_RIGHT:
+                            self.snake.change_direction(RIGHT)
+                    
+                    if event.key == pygame.K_ESCAPE:
                         return False
         
         return True
     
     def update(self):
         """Update game state"""
-        if not self.game_over:
+        if not self.game_over and not self.paused:
             self.snake.update()
             
             # Check food collision
@@ -220,11 +236,19 @@ class SnakeGame:
         score_text = self.font_small.render(f"Score: {self.score}", True, COLOR_SCORE)
         self.screen.blit(score_text, (10, 10))
         
+        # Draw game state
+        if self.paused:
+            state_text = self.font_small.render("PAUSED", True, COLOR_GAME_OVER)
+            self.screen.blit(state_text, (WINDOW_WIDTH - STATE_TEXT_X_OFFSET, 10))
+        elif not self.game_over:
+            state_text = self.font_small.render("Playing", True, COLOR_SNAKE)
+            self.screen.blit(state_text, (WINDOW_WIDTH - STATE_TEXT_X_OFFSET, 10))
+        
         # Draw game over screen
         if self.game_over:
             # Semi-transparent overlay
             overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
-            overlay.set_alpha(180)
+            overlay.set_alpha(OVERLAY_ALPHA_GAMEOVER)
             overlay.fill(COLOR_BACKGROUND)
             self.screen.blit(overlay, (0, 0))
             
@@ -243,6 +267,28 @@ class SnakeGame:
             restart_rect = restart_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 70))
             self.screen.blit(restart_text, restart_rect)
         
+        # Draw pause screen
+        elif self.paused:
+            # Semi-transparent overlay
+            overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
+            overlay.set_alpha(OVERLAY_ALPHA_PAUSED)
+            overlay.fill(COLOR_BACKGROUND)
+            self.screen.blit(overlay, (0, 0))
+            
+            # Paused text
+            paused_text = self.font_large.render("PAUSED", True, COLOR_GAME_OVER)
+            paused_rect = paused_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 40))
+            self.screen.blit(paused_text, paused_rect)
+            
+            # Instructions
+            resume_text = self.font_small.render("Press P to Resume", True, COLOR_SCORE)
+            resume_rect = resume_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 20))
+            self.screen.blit(resume_text, resume_rect)
+            
+            restart_text = self.font_small.render("Press R to Restart", True, COLOR_SCORE)
+            restart_rect = restart_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 60))
+            self.screen.blit(restart_text, restart_rect)
+        
         pygame.display.flip()
     
     def restart_game(self):
@@ -251,6 +297,7 @@ class SnakeGame:
         self.food.randomize_position(self.snake.positions)
         self.score = 0
         self.game_over = False
+        self.paused = False
     
     def run(self):
         """Main game loop"""
