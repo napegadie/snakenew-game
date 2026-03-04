@@ -1,0 +1,26 @@
+name: SRE Checks
+
+on:
+  pull_request:
+
+jobs:
+  sre-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit Tests
+        run: npm test
+
+      - name: Timeout & Retry Policy Check
+        run: |
+          grep -R "timeout:" . || echo "::warning Missing explicit timeout"
+          grep -R "retry" . || echo "::warning No retry logic found"
+
+      - name: Health Endpoint Check
+        run: |
+          grep -R "/health" . || echo "::warning No health endpoint detected"
