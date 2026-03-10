@@ -45,7 +45,7 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# TODO: temporary change to test Copilot PR review
+
 
 class Snake:
     """Snake class to manage snake position, movement, and growth"""
