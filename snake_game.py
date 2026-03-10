@@ -46,6 +46,7 @@ LEFT = (-1, 0)
 RIGHT = (1, 0)
 
 
+
 class Snake:
     """Snake class to manage snake position, movement, and growth"""
     
