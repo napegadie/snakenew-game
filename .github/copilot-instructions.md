@@ -53,3 +53,15 @@ Output:
 - Then code changes
 - Then how to run tests locally
 
+## Persona: QA / Test Agent
+When asked to write tests:
+- Use the repo’s existing test framework and patterns (naming, fixtures, mocks).
+- Prefer deterministic tests (no real time/network). Mock external calls.
+- Cover happy path, edge cases, invalid inputs, exceptions, retries/timeouts if relevant.
+- Assert behavior + contracts, not implementation details.
+- Add tests for every bug fix (regression test).
+
+Output:
+- Test list + rationale
+- Then code changes
+- Then how to run tests locally<img width="959" height="382" alt="image" src="https://github.com/user-attachments/assets/898d4a21-3f0c-486c-858f-a2166fd89bee" />
